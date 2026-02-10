@@ -1,0 +1,846 @@
+UDEMY - The Python Mega Course Build 10 Real World Applications
+----------------------------------------------------------------
+next: 214
+
+Setting up python:
+1. install python
+2. add development IDE
+3. create environment (conda, venv)
+4. activate new virtual env
+5. develop/test/run/release the application
+- pip install, pip freeze, pip uninstall packages as required
+	- manage package dependencies automatically using the "poetry" package (installed to the main python installation, so that it's available for a new environment)
+		- pip install poetry
+		- either cd to the folder where the new project is to be created
+			- poetry new ./poetry_test # creates a basic project structure in the current dir
+		- or cd to an existing project and initialize it with poetry:
+			- poetry init
+		- poetry add requests # install a new requirement 
+		- poetry config --list, poetry env list, poetry install --dry-run, poetry env info --path
+- codestyle checking: pylint (e.g. pylint bad_style_example.py), ruff
+- creating a package from multiple files in a directory (and a special (usually empty) file called "__init__.py", root package directory should have "__main__.py")
+- coding convensions:
+	function naming convension: snake_case
+	constants:
+	package global variables: e.g. __version__
+	absolute import for clarity: from my_package.utils import my_funct1
+
+6. running the app 
+	- from the top directory where the main_app.py file is: python main_app.py
+	- from any other directory: python -m my_package.main_app
+		(if discoverable/listed with the 
+		import sys 
+		sys.path
+		)
+		PYTHONPATH env variable would be automatically extended to sys.path
+7. testing: unittest - python standard library (e.g. python -m unittest <tests.test_main.py>) or
+	import unittest
+	class MyTest(unittest.TestCase):
+		def test_xxx(self):
+			x=mycode_call
+			self.assertEqual(x, 5)
+	if __name__ == '__main__':
+		unittest.main()
+		
+	pytest - needs to be installed
+	mock testing
+	deepeval - for LLM promt testing LLM models, synthetic data generation
+8. deactivate virtual env
+9. remove virtual env dir if not needed
+
+
+to run python:
+- push run button (if terminal is simply in shell, and not in python interactive mode)
+- or: py -3.9 basics.py
+- or py -3.9  (interactive shell)
+- or py
+
+exit() - exit interactive shell
+type(x) - returns the type of x
+dir(list) - returns the operators of list data type, mutable (can append / remove items)
+dir(dict) - returns the operators of dictionary data type
+dir(tuple) - returns the operators of tuple data type (record), unmutable
+tuple comparison:
+if (dt1.year, dt1.month, dt1.day) < (dt2.year, dt2.month, dt2.day):
+	print("first date is earlier then second")
+	
+magic variables:
+__name__ - module name
+__file__ - file path
+__doc__ - current method's documentation text
+__package__ - package name of this module
+__spec__ - 
+__cached__ - path to the compiled .pyc cache file
+	
+	
+number representations:
+bin(312)
+hex(312)
+oct(312)
+
+
+variable scope:
+name="hello"
+def f1():
+	global name
+	name = "World" # changes the global var
+	
+
+ternary operator:
+print("a" if 1 > 2 else "b")
+	
+tuple packing (zip):
+l1 = [1,2,3,4,5]
+l2 = ['a','b','c','d','e']
+for c in zip(l1, l2):
+	print(c[0], c[1])
+	
+tuple unpacking:
+for (a,b) in [(1,2),(3,4),(5,6)]:
+	print(a)
+	print(b)
+	
+list enumerate:
+l = ['a', 'b', 'c']
+for k,v in enumerate(l):
+	print(f'key: {k}, value: {v}')
+
+random choice from a list:
+action = ['debit', 'credit'][randint(0, 1)] # from list of ['debit','credit'], chose [0] or [1]!
+
+dir(__builtins__) - show builtin functions
+help(str.upper) - information on str.upper method or property (ctrl+c exits help() interactive help)
+help(mylist.pop) - help on list.pop
+
+"hello".upper() - upper case of the string
+
+print("{1} {1}".format("Hello", "World"))
+print(f"{var1} {var2}")
+print(f"{10/3:4.3f}") # format the 10/3 to floating point 4.3 size
+
+data types (implicit) int, float, string, list, dictionary, tuple
+
+variable types are just hints. for strict typing, hints are required. e.g.
+p = list[Person] = [ Person(...), Person(...),...]
+x = 10 - implicitely creates x as int type
+x: int = 10 - explicitely specifying int type hint
+
+type checking example:
+type(x)
+[not] isinstance(x, (int, bool))
+
+def has_even_number(l:list) -> bool:
+	if not isinstance(l, list):
+		raise TypeError("Input must be a list")
+	
+	return any(isinstance(i, int) and i % 2 == 0 for i in l)
+
+
+x = 10
+y1 = '10'
+y2 = "10"
+z = 10.8
+lst = [1,3,6] # store multiple items in a variable, ordered, changeable (add, remove, change), duplicates allowed
+tpl = (1,3,6) # store multiple items in a variable,  ordered, unchangeable, duplicates allowed
+set1 = {1, 2, 3} # store multiple items in a variable, unordered, unchangeable, duplicates not allowed
+dct = {"marry": 9.1, "john": 33.1} # store multiple key/value pairs in a variable, ordered, changeable, duplicates not allowed
+dct.items() # list of dict key/value pairs
+dct.keys()  # list of dict keys (default?)
+dct.values() # list of dict values
+my_avg = sum(dct.values()) / len(dct.values())
+dictionary comprehension
+d = {x: x**2 for x in range(10)} # {0: 0, 1: 1, 2: 4, ...}, similar to list comprehension: l = [x**2 for x in range(10)]
+d = {chr(ord('a') + x): x for x in range(10)} # {'a': 0, 'b': 1, ...}
+
+r = range(6)
+
+loops (break, continue to get out of the loop):
+
+#list comprehension: 
+my_list2 = [list / 10 for list in my_list1 if list != -9999]
+
+# generator comprehension: same as a list comprehension, but using () instead of [], so that the list is given as generator (yields the results)
+gencomp = (item for item in range(10) if item > 3)
+for item in gencomp:
+    print(item)
+
+or each letter will be replaced by the next in alphabet:
+s = "Hello World"
+a = ''.join([chr(ord(l)+1) for l in s])
+print(a)
+
+# filter() - returns those elements for with the function is True
+# map() - executes the function for each element in a list
+nums = [c for c in range(30)]
+adults = filter( lambda x: x >= 18, nums) # or a proper function instead of lambda to return true/false if param >= 18
+adults_l = list(adults) # 
+m = map(lambda x: x * 2, adults_l) # calls the function (first argument) with all the members of the second argument, instead of calling each value one by one. result can be converted to a list(map(...))
+
+so the same achived with map and list comprehension:
+m1 = list(map(f1, l1))
+m2 =[f1(i) for i in l1]
+
+
+#iterating (list,tuples,sets,dicts)
+lst = [1,3,4,8,2]
+i = lst.iter()
+print(next(i))
+print(next(i))
+print(next(i))
+
+# looping through
+for c in lst:
+	print(c)
+
+
+#lambda function: small anonymous function
+l = lambda a: a + 10
+print(l(12))
+
+while a < 6:
+	if b == 5:
+		continue
+	if b == 7:
+		break
+
+
+dynamic command execution:
+eval("2 + 3")
+
+date/time:
+import datetime
+dt = datetime.date.today();print(f"{dt.strftime('%Y-%m-%d')}, {dt.year}")
+tm = datetime.datetime.now(); print(tm.strftime("%Y-%m-%d %H:%M:%S"))
+ts = datetime.datetime.now().timestamp() # ellapsed seconds since epoch
+
+finding strings + regexp:
+substr in str - check if inside
+str.find(substr) = index or -1
+str.index(substr) = index or valueError
+str.rfind(), rindex() - reverse find
+str.count(substr) - count the non-overlapping occurences
+
+import re
+pattern = r"\(\d{3}\) \d{4}-\d{4}" 
+	# \d=digit, \w=alphanum, <s=whitespace, \D=non-digit, \W=non-alphanum, \S=non-whitespace
+	# {min_occur[,max_occur]}, ?=zero or 1, *=zero or more, +=1 or more
+	# |=or, &=and
+	# .=wildcard char
+	# ^=starts with (a char)
+	# $=ends with (a char)
+	# [^\d]+ = exclude one or more (digits), [^!.?]+ = exclude one or more (i.e. all) punctuations
+s = "(555) 1322-1234"
+re.search(pattern, s) - find first match
+re.findall(pattern, s) - find all matches returning a list
+re.finditer(pattern,s) - find all matches returning a iterable
+pattern = re.compile(r"(\(\d{3}\)) (\d{4})-(\d{4})") - compiles more than 1 pattern groups separated by ().  note the extra \( and \) because of the required brackets by compile. 
+#(\(\d{3}\)) - group will return number with ()
+#\((\d{3})\) - group will NOT return number with ()
+re.search(pattern, s) - find first match
+print(result.group(), result.group(0), result.group(1), result.group(2)) - print compiled pattern match(es)
+result = re.match(pattern, s)
+
+
+exception handling:
+ZeroDivisionError
+FileNotFoundError
+ConnectionError - Network connection issues
+OSError - Operating system error 
+KeyError  - dictionary key not found
+IndexError - index out of range
+TypeError - wrong data type
+SyntaxError - it gets caught and thrown either at parse time, before the code starts running, or if code has dynamic part, e.g. eval("2 +* 3")
+
+
+try:
+	print("trying")
+except TypeError:
+	print("it's a type error")
+except:
+	print("error")
+finally:
+	print("always run")
+
+
+import <modulename>
+e.g.:
+import sys
+import time
+import os
+from collections import Counter # count the occurence of each item in a list
+Counter([0,0,0,1,1,2,3,3,3,3,4,4]) or Counter(sentence.split(' '))
+
+install other modules/packages (several modules): (pip install, list, show <package> uninstall <package>)
+pip install pandas
+
+TOOLS used:
+===========
+Visual Studio Code - 
+Jupyter notebook - web based browser, interactive shell, like databricks notebook
+
+pip installed packages: (pip list)
+==================================
+pandas - dataframe / analysis
+xlrd - xls reader
+openpyxl - xlsx reader
+Jupyterlab notebook (C:\Users\Norbert\AppData\Roaming\Python\Python39\Scripts\jupyter-nbclassic)
+opencv-python (for cv2)
+
+
+environment setup:
+# conda is a generic package manager, pip is only for python
+conda create -n myenv  python=3.11 # create a new environment
+conda activate myenv
+conda deactivate
+conda info # current active environment
+conda env list # list installed environments
+conda env remove -n myenv
+pip install mypackage1 mypackage2 ...
+pip freeze > requirements.txt # install existing requirements
+pip install -r requirements.txt
+
+#to add the new myenv to jupyter:
+conda create -n myenv  python=3.11 # create a new environment
+conda activate myenv
+pip install --user ipykernel
+python -m ipykernel install --user --name=myenv
+# update the jupyter page to see the new env for the kernel option on the launcher page
+
+#to remove the myenv from jupyter and conda:
+jupyter kernelspec list
+jupyter kernelspec uninstall myenv
+conda remove myenv
+
+
+environment setup with python venv (without conda):
+# to create a new venv
+python -m venv <venv_home_dir>, e.g. python -m venv .vevn
+#to activate an existing venv
+source <venv_home_dir>/bin/activate   # e.g. source ./.venv/bin/activate
+# to deactivate venv
+deactivate
+
+note: cannot just copy project folder with .venv, because the .venv has hard-coded link to directories in:
+- pyvenv.cfg
+- Scripts\activate.bat
+
+
+creating a package from simple .pyfiles:
+========================================
+running simple (non-hierarchic) scripts:
+import myfile2
+python myfile1.py
+
+running hierarchic scripts as package, but then individual modules cannot be invoked due to import issues:
+import sys
+print(sys.path) # search path that python uses to find packages, usually with current ('') directory included
+- each folder in the package hierarchy must have "__init__.py" file
+- main application module (file) should be named "__main__.py"
+- example for import: from mypackage1 import utilities as utl
+- running the package, always from the top module:
+python -m mypackage1 # will run __main__.py under mypackage1
+python -m pytest # search for test modules and run them
+
+code style checker:
+lint
+ruff
+
+data type hints / checking:
+from typing import Dict, Optional, 
+d1 = Dict[int, str] = {1: "John", 2: "Peter"}
+d2 = Dict[int, Any] = {1: "John", 2: {1: "Jeane"}}
+
+development environments:
+- PyCharm
+- Visual Studio Code
+	- copilot (free) Ask/Edit/Agent mode
+		chat in VS code to do things. 
+		gives realtime suggestions
+		can request changes inside remarks
+	
+
+	
+parameters - in the required order:
+req1 - required positional argument (provided first WITHOUT (positional), then WITH (keyword) param name). following a non-keyword (positional) argument, keyword arguments can not be specified!
+*args - to catch any extra positional arguments, (positional arguments), provided without param name, only identified by their position/order) packed into TUPLE
+**kwargs - dict to be unpacked (keyword arguments), provided by parameter ("key"), of course cannot be the same as those required
+
+for key, value in kwargs.items():
+        print(f"  - {key}: {value}")
+
+calling a function with dict as parameter list:
+def f1(id, name, email):
+	print(id, name, email)
+	
+data = {"id": 1, "name": "John", "email": "hello@test.com"}
+f1(**data)
+
+operations with the *args
+def f2(*args):
+	if not all(isinstance(arg, int) for arg in args):
+		raise TypeError("All arguments must be integers")
+	
+	return {"count" : len(args), "sum": sum(args), "max": max(args)}
+	
+def f3(a, b=3, *args, **kwargs):
+	return a + b + sum(args) + sum(kwargs.values())
+
+using yield (generator) to iterate through instead of returning all data at once:
+def f(d: dict):
+	for k in d.keys():
+		yield d[k]
+
+# calling the yield and iterating through, instead of getting data back as one
+for c in f():
+	print(c)
+
+all([...]) and any([...]) functions return true if all/any elements are true
+l = [1, 2, 3, 4, 5,-7]
+print(any([i < 0 for i in l]), all([i < 0 for i in l]))
+
+http communication, web-scraping (use bs4 - beautiful soup):
+import requests
+session = requests.Session() # if session is not used, all calls are slow...
+r = session.get('http://....')
+r.raise_for_status()
+print(r.text) - unicode text converted
+print(r.content) - bytes
+json_data = re.json()
+
+
+
+running asyncronous tasks using async, await, asyncio.gather, asyncio.run():
+==========================
+import asyncio
+import time
+async def job1():
+    await asyncio.sleep(2)
+    return "Result from Job 1"
+
+async def job2():
+    await asyncio.sleep(2)
+    return "Result from Job 2"
+
+
+start_time = time.monotonic()
+
+async def async_job_test():
+
+	# option 1
+	# start to run the tasks in parallel
+	task1 = asyncio.create_task(job1())
+    task2 = asyncio.create_task(job2())
+	# can do some synchronous tasks here, 
+	# ...
+	# then gather the results from above!!!
+    results = await asyncio.gather(task1, task2)
+
+	# option 2
+	# the benefit here is to start running the tasks in parallel and its simplicity!!!
+    results = await asyncio.gather(
+            job1(),  # Call and await the coroutine job1()
+            job2()   # Call and await the coroutine job2()
+        )
+    
+    end_time = time.monotonic()
+    print(f"Results: {results}")
+    print(f"Total elapsed time: {end_time - start_time:.2f} seconds.")
+
+asyncio.run(async_job_test()) 
+
+to handle thread safe functions (only one execution at a time is allowed):
+def __init__(self):
+	self._lock = asyncio.Lock()
+
+def myfunct1(self):
+	async with self._lock:
+		# do any serially locked work in here
+
+
+python classes:
+naming convension: 
+NameOfTheClass
+def some_class_method() - a "function" in a class is a method...
+def __new__(self)
+def __init__(self, params)
+def __str__(self)
+def __repr__(self)
+def __del__(self)
+
+def __eq__(self, other)
+def __lt__(self, other)
+def __le__(self, other)
+def __gt__(self, other)
+def __ge__(self, other)
+def __len__(self)
+
+__add__, __sub__, __mul__, __truediv__, __floordiv__, __mod__, __pow__
+__iter__, __next__
+
+
+
+
+class A:
+	__my_private_var: int = 0 # private class variable, automatically gets renamed to "_A__my_var", so not impossible to access, but difficult
+	_my_protected_var: int = 0 # "protected" class variable, a gentlemen's hint not to use this variable
+	DEBUG_MODE = False # class attribute, like java constant.  accessible through class. changing class attribute changes the class attribute value. 
+					   # changing this variable on an instance will implicitely create and set a new attribute for that instance.
+	
+	def __init__(self, id: int, name: str):
+		self._id = id  # instance variables (or attributes). Using a single leading underscore for "protected" access (only as a gentlemen's hint)
+        self._name = name
+		
+	def name(self):
+		return self._name # return the protected property
+		
+	def __str__(self):
+        """Returns a string representation of the Person object."""
+        return f"Person(ID: {self.id}, Name: {self.name})"
+		
+class B(A):
+	def __init__(self, id: int, name: str):
+		super().__init__(id, name) # calling the super class
+
+changing the class attributes A.DEBUG_MODE will change the "class variable" for ALL instances. 
+changing the "class variable" on an instance, will instead implicitely create an instance variable and set its value only on that instance, shadowing the real "class variable"!
+A._id = 6 # implicitly creating a class variable (for all existing and future instances)
+a.DEBUG_MODE = True # will create a new instance variable for a, shadowing the class variable, until the instance variable is removed with del a.DEBUG_MODE
+
+get all the variables of a class/instance:
+print(A.__dict__, a.__dict__)
+
+get all class (directly defined in the class) and instance (defined in the __init__ or other methods) variables of an instance:
+def dict(self):
+	# Get instance variables
+	instance_vars = {k: v for k, v in self.__dict__.items() if not k.startswith('_') and not callable(v)}
+	
+	# Get class variables (that aren't methods)
+	class_vars = {k: v for k, v in self.__class__.__dict__.items() 
+				if not k.startswith('_') and not callable(v) and not isinstance(v, property)}
+	
+	# Merge them (instance variables override class variables)
+	return {**class_vars, **instance_vars}
+
+
+
+using standard python decorators (@staticmethod, @classmethod, @property, @unique)
+class A:
+	class_var = 0
+	@staticmethod
+	def my_static_method():  # this can be called as A.my_static_method(), self will not be part of the parameters
+		return 1
+		
+	@classmethod
+	def my_class_method(cls):  # this can be called as A.my_static_method(), self will not be part of the parameters
+		cls.class_var += 1
+	
+	@property
+	
+	@functools.lru_cache(maxsize=128, typed=False) # caches the result if called with same parameter values
+	def my_funct1(a, b):
+		retutrn a + b
+		
+from enum import Enum, unique
+
+@unique
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+    # YELLOW = 1 # Would raise ValueError if uncommented
+
+		
+
+
+when to use classes and when to implement them as pure functions e.g. in modules:
+- when functions/methods are specific to a data structure (e.g. object state), it's classes
+- when functions/methods are generic, static (not state dependent, only by input parameters), they could be
+
+to create a python package in a folder structure like:
+my_awesome_library/
+├── src/
+│   └── my_awesome_library/  # This is your actual Python package
+│       ├── __init__.py      # Makes 'my_awesome_library' a Python package
+│       └── my_module.py     # Your main library code
+│       └── another_module.py # Your second file (optional)
+├── pyproject.toml           # Configuration file for building and metadata
+├── README.md                # Description of your library
+├── LICENSE                  # Your project's license
+└── .gitignore               # (Optional) For Git, to ignore build files etc.
+
+- create and configure a file: pyproject.toml
+- pip install build twine
+- python -m build
+- created package: dist/*.whl
+- test install the new package: 
+	- either pip install dist/my-awesome-library-Norbert.whl
+	- or pip install dist/my-awesome-library-Norbert.tar.gz
+- test the new module (underscore, and not the full name, but only the real name of the original directory of the library...!!!!):
+	- from my_awesome_library.my_module import Person
+	
+
+wrappers (using decorator, for testing or REST API routing, etc.)
+def new_funct(f_orig):
+	def wrapper(a,b):
+		print("before call")
+		f_orig(a,b) # calling the original function if required
+		print("after call")
+	return wrapper
+
+@new_funct
+def orig_funct(a,b)
+	return a+b
+
+mock test example:
+version1:start/stop, e.g. good for a bugfix, without stop()
+version2: with(), only patches inside the with block
+==================
+# pip install mock
+# version 2: start() / stop()
+from unittest.mock import patch, MagicMock
+
+class MyClass:
+    a: int = 5
+
+    def my_method(self, n1, n2) -> int:
+        print('orig method called')
+        return n1 + n2 + 1
+
+original_instance = MyClass()
+print(f"Original instance 'a': {original_instance.a}")
+print(f"Original instance 'my_method' returns: {original_instance.my_method(10, 10)}")
+
+my_class_patcher = patch('__main__.MyClass', new_callable=MagicMock)
+MockMyClass = my_class_patcher.start()
+mock_instance = MockMyClass.return_value
+mock_instance.a = 6
+#mock_instance.my_method.return_value = 2 # simple return value
+mock_instance.my_method.side_effect = lambda x,y: x+y # return value depending on input params
+
+mocked_obj = MyClass() # This now refers to mock_instance due to the patch
+print(f"Mocked instance 'a': {mocked_obj.a}")
+print(f"Mocked instance 'my_method' returns: {mocked_obj.my_method(10, 10)}")
+
+# Verify that the mocked method was called
+mock_instance.my_method.assert_called_once()
+print("-" * 30)
+
+my_class_patcher.stop()
+
+FAST API
+--------
+- pip install uvicorn, fastapi
+	- uvicorn is a webserver for fastapi
+- can be run from within the application if this is the main interaction
+	- uvicorn.run("app.main:app", host=host, port=port, reload=True) # app.main should have an app= line as below
+- or can be run from the terminal, if the original application needs a separate process flow, user interactions, etc.
+	- uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+- app = FastAPI(
+    title="Comprehensive FastAPI Example API",
+    description="A complete example showcasing important FastAPI constructs.",
+    version="1.0.0",
+    redoc_url="/redoc", # You can customize the ReDoc URL
+    docs_url="/docs", # You can customize the Swagger UI URL
+    lifespan=lifespan
+)
+
+- add lifespan function to startup/shutdown
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("API has started successfully! Documentation available at: http://localhost:8000/docs")
+    
+    # Yield control to the application
+    yield
+    
+    print("API is shutting down...Cleanup completed.")
+
+- add middleware to log/output things. automatically called with each request
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request) # Process the request and get the response
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    print(f"Request took {process_time:.4f} seconds.")
+    return response
+
+- add Exception handler for Pydantic validation errors
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(content={"detail": "Input validation error", "errors": exc.errors()})
+
+- add routers
+app.include_router(users.router)
+app.include_router(items.router)
+
+
+- create routers each in a separate file, such as:
+# Create an APIRouter instance
+router = APIRouter(
+    prefix="/users",
+    tags=["users"],
+    dependencies=[Depends(get_current_user)], # Apply this dependency to all routes in this router
+    responses={404: {"description": "Not found"}},
+)
+
+- add the required methods with POST/GET/PUT or PATCH/DELETE, using 
+	static CRUD functions (e.g. create_user, get_user, update_user, delete_user), 
+	GET = query parameters (url?parame=value1&param2=value2...), no body allowed, i.e. only primitive types as input param!
+	POST,PUT,PATCH,DELETE = can have body, i.e. primitiv types and class types as input params
+	e.g.:
+
+
+# query parameter validation:
+from fastapi import Query
+@app.get('/books')
+async def read_book(book_id: int = Query(gt=0, lt=1000))
+...
+
+
+# path parameter validation:
+from fastapi import Path
+@app.get('/books/{book_id}')
+async def read_book(book_id: int = Path(gt=0, lt=1000))
+
+from fastapi import Header, HTTPException, status
+@router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+async def create_user(user: User):
+    if user.username in fake_db["users"]:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Username already exists."
+        )
+     
+    return UserCRUD.create_user(db, username, email)
+
+
+get - cannot have body
+post, put, patch, delete - can have body. use double quotes, not single, in body json
+
+restAPI call from code:
+session = requests.Session()
+r = session.post("http://localhost:8000/debit", json={"amount": 100}) # for class-type input
+r = session.post("http://localhost:8000/do_nothing", params={"amount": 100}) # for primitive-type input
+curl http://localhost:8000/do_nothing?amount=100
+
+
+primitive method params - swagger shows them as "Query", "parameters"
+class method params - swagger shows them as "No parameters" and expects json formatted data input, with "schema" having the class sctructure
+
+
+
+DATABASES
+----------
+CRUD: create/read/update/delete (directly translates to REST API calls POST/GET/PUT or PATCH/DEL)
+ORM: Object Relational Mapping
+sql_alchemy: library to handle DB layer
+	- Base class is defined as 
+		from sqlalchemy.ext.declarative import declarative_base
+		Base = declarative_base()
+	- classes defined, inherited from sqlalchemy (Base), 
+	- modelled table name defined: __tablename__ = "users"
+	- simple properties are defined with sqlalchemy's Column(), e.g. Column(Integer, primary_key=True, unique=True, index=True, nullable=False, ForeignKey("users.id"))
+		- foreign key location determines the relationship types (1-1, 1-M, M-M)
+	- relationships (FK)
+		in addition to the "ForeignKey" in the column definition, an extra relationship Object should be defined, to optimize access (insterad of id-s, object pointers) e.g. 
+		author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+		author = relationship("User", back_populates="posts")
+		
+		if no "ForeignKey" is defined, but the object definition is there, a list of objects will be maintained, because it must be the One side of the 1-M relationship
+	- CRUD (all db classes/tables would have a CRUD implementation), e.g. for the User class, create a UserCRUD class with:
+		- create_user(...): user = User(...), db.add(), db.commit(), db.refresh(), return user
+		- get_user(...): return db.query(User).filter(User.id == user_id).first() # User.id comes from the model
+		- get_user_by_username(...), get_user_by_email(...), ...
+		- get_users()
+		- update_user(...)
+			- query the user based on its id, 
+			- if found, iterate through all supplied parameters: for key, value in kwargs.items: if hasattr(user, key): setattr(user, key, value) # setting the attribute must be dynamic(!) hence using hasattr(), setattr(), getattr()
+			- db.commit(), db.refresh(user)
+		- delete_user(...)
+			db.delete(user), db.commit(), return True/False
+			
+	- Database level functions:
+		- create_database: Base.metadata.create_all(bind=engine)
+		- drop_database: Base.metadata.drop_all(bind=engine)
+		- check "registered" models (Classes): 
+			for table_name, table_obj in Base.metadata.tables.items():
+				print(f"Table: {table_name} - Columns: {', '.join(col.name for col in table_obj.columns)}")
+		- if schema changes, but database schema is already created, NO automatic
+alembic: migrate DB related changes
+	- initialize: alembic init <subdir> or python -m alembic <subdir>
+	- edit alembic.ini
+		sqlalchemy.url=sqlite:///./app.db
+	- edit env.py
+		import my_tests
+		target_metadata = my_tests.Base.metadata
+	- migrate: 
+		alembic history
+		alembic revision --autogenerate --message "initial migration"
+			- generates upgrade and downgrade functions compared to the current database state
+			- creates an "alembic_version" table
+			- check/validate migration scripts
+			
+		alembic upgrade <revision> (or +1 to run 1 upgrade script, or head, to run each upgrade script from current version to the newest)
+			- runs the "upgrade" function of that version
+			- updates the alembic_version table
+		alembic "downgrade" <revision> (or -1 to run 1 downgrade script, or base, to run all downgrade script from current to first)
+			- runs the downgrade function of that revision
+			- updates the alembic_version table
+			
+	- data changes:
+		- primarily it's schema migration, but with the op.execute(text('sql_command')) we can modify the data, too.
+		
+		
+
+	
+GraphQL (query language for APIs):
+==================================
+- used for mobile and web applications
+	- instead of making several rounds using RestAPI endpoints (each having a fixed data structure result that returns more or less than needed), gets the result in one query/response
+	- integrating different data sources: 
+		- client specifies exactly what is required in the result
+		- single endpoint for all integrated systems
+		- with well-defined graphQL schema, frontend teams can develop and evolve UI independently
+		
+e.g. query:
+query GetUserAndPosts {
+  user(id: "123") {
+    id
+    name
+    email
+    posts(first: 3) {
+      id
+      title
+      publishedAt
+    }
+  }
+}
+
+response:
+{
+  "data": {
+    "user": {
+      "id": "123",
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "posts": [
+        {
+          "id": "post-456",
+          "title": "A Guide to GraphQL",
+          "publishedAt": "2025-08-18T10:00:00Z"
+        },
+        {
+          "id": "post-789",
+          "title": "The Benefits of Microservices",
+          "publishedAt": "2025-08-15T15:30:00Z"
+        },
+        {
+          "id": "post-101",
+          "title": "Getting Started with Node.js",
+          "publishedAt": "2025-08-12T09:45:00Z"
+        }
+      ]
+    }
+  }
+}
